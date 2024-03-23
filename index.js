@@ -1,10 +1,10 @@
 autowatch = 1;
-outlets = 1;
-
-// var { teoria } = require("./teoria.js");
+outlets = 2;
 
 var ready = true;
 var context = {};
+var { generate } = require("./generate");
+var chordProgression = "2,5,1,1";
 
 function jsonToDict(json_representation) {
   var dict = new Dict();
@@ -21,8 +21,7 @@ function dictToJson(dictionary_name) {
 function bang() {
   if (!ready) return;
 
-  const notes = generateBasedOnContext(context);
-
+  const notes = generate(context, chordProgression);
   outlet(0, "dictionary", jsonToDict({ notes: notes }).name);
 }
 
@@ -34,57 +33,20 @@ function set_context(dummy, dictName) {
   context = dictToJson(dictName);
 }
 
-var C1 = 36;
+function set_chord_progression() {
+  const args = arrayfromargs(messagename, arguments);
 
-function generateBasedOnContext(context) {
-  if (!context) return [];
+  chordProgression = args
+    .join("")
+    .replace("set_chord_progression", "")
+    .replace("text", "")
+    .replace(/0/g, ",");
 
-  const progression = ["2", "5", "1", "1"];
-  const length =
-    context.clip.time_selection_end - context.clip.time_selection_start;
-
-  const starTimeOffset = context.clip.time_selection_start;
-  const lengthPerChord = length / progression.length;
-
-  const chords = [];
-  for (var i = 0; i < progression.length; i++) {
-    const chordNumber = progression[i];
-    const scaleOffsetForCurrentChord = Number(chordNumber) - 1;
-    const scaleRootNote = C1 + context.scale.root_note;
-
-    chords.push({
-      pitch:
-        scaleRootNote +
-        context.scale.scale_intervals[scaleOffsetForCurrentChord],
-      start_time: starTimeOffset + lengthPerChord * i,
-      velocity: 100,
-      duration: lengthPerChord,
-    });
-    chords.push({
-      pitch:
-        scaleRootNote +
-        context.scale.scale_intervals[
-          (scaleOffsetForCurrentChord + 2) %
-            context.scale.scale_intervals.length
-        ],
-      start_time: starTimeOffset + lengthPerChord * i,
-      velocity: 100,
-      duration: lengthPerChord,
-    });
-    chords.push({
-      pitch:
-        scaleRootNote +
-        context.scale.scale_intervals[
-          (scaleOffsetForCurrentChord + 4) %
-            context.scale.scale_intervals.length
-        ],
-      start_time: starTimeOffset + lengthPerChord * i,
-      velocity: 100,
-      duration: lengthPerChord,
-    });
-  }
-
-  return chords;
+  change();
 }
 
-exports.generateBasedOnContext = generateBasedOnContext;
+function change() {
+  if (ready) {
+    outlet(1, "bang");
+  }
+}
