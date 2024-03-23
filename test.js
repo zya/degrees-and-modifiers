@@ -1,42 +1,23 @@
-autowatch = 1;
-outlets = 1;
+const { generateBasedOnContext } = require("./index");
+const context = {
+  clip: {
+    time_selection_start: 0.0,
+    time_selection_end: 4.0,
+    insert_marker_time: 0.0,
+    first_note_start: 0.9,
+    last_note_end: 0.25,
+    lowest_pitch: 36,
+    highest_pitch: 36,
+  },
+  scale: {
+    scale_mode: 1, // this one is 0 when scale is turned off in clip view
+    root_note: 1, // starting from c - 12 options
+    scale_intervals: [0, 2, 4, 5, 7, 9, 11], // this one represents the scale selected in semitones
+  },
+  grid: {
+    interval: 0.25,
+    enabled: 1,
+  },
+};
 
-var { teoria } = require("./teoria.js");
-
-var ready = true;
-var context = {};
-
-function jsonToDict(json_representation) {
-  var dict = new Dict();
-  dict.parse(JSON.stringify(json_representation));
-  return dict;
-}
-
-function dictToJson(dictionary_name) {
-  var dict = new Dict(dictionary_name);
-  var string_representation = dict.stringify();
-  return JSON.parse(string_representation);
-}
-
-function bang() {
-  if (!ready) return;
-
-  post(teoria.note());
-
-  const note = {
-    pitch: 36,
-    start_time: 0,
-    velocity: 100,
-    duration: 0.25,
-  };
-
-  outlet(0, "dictionary", jsonToDict({ notes: [note] }).name);
-}
-
-function set_ready() {
-  ready = true;
-}
-
-function set_context(dummy, dictName) {
-  context = dictToJson(dictName);
-}
+console.log(generateBasedOnContext(context));
