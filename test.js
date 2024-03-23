@@ -1,4 +1,4 @@
-const { generateBasedOnContext } = require("./index");
+const { generate, parseEntry } = require("./generate");
 const context = {
   clip: {
     time_selection_start: 0.0,
@@ -20,4 +20,11 @@ const context = {
   },
 };
 
-console.log(generateBasedOnContext(context));
+// console.log(generate(context, "2,5,1"), "\n");
+// console.log(generate(context, "2(sus2),5(seven),1,1"), "\n");
+// console.log(generate(context, "2(modifier1+modifier2),5,1"));
+
+// console.log(parseEntry("2"));
+// console.log(parseEntry("2(modifier)"));
+// console.log(parseEntry("2(modifier1 modifier2)"));
+// console.log(parseEntry("1(seven+nine+eleven)"));
