@@ -18,10 +18,37 @@ function dictToJson(dictionary_name) {
   return JSON.parse(string_representation);
 }
 
+function getNotesFromChords(context, progression, chords) {
+  const notes = [];
+  const starTimeOffset = context.clip.time_selection_start;
+  const duration =
+    context.clip.time_selection_end - context.clip.time_selection_start;
+  const durationPerChord = duration / progression.length;
+
+  for (var i = 0; i < chords.length; i++) {
+    for (var j = 0; j < chords[i].length; j++) {
+      const { pitch } = chords[i][j];
+      notes.push({
+        pitch: pitch,
+        duration: durationPerChord,
+        start_time: starTimeOffset + durationPerChord * i,
+        velocity: 100,
+      });
+    }
+  }
+
+  return notes;
+}
+
 function bang() {
   if (!ready) return;
 
-  const notes = generate(context, chordProgression);
+  const progression = chordProgression.split(",");
+  post("prog", progression);
+
+  const chords = generate(context, progression);
+  const notes = getNotesFromChords(context, progression, chords);
+
   outlet(0, "dictionary", jsonToDict({ notes: notes }).name);
 }
 
@@ -42,6 +69,7 @@ function set_chord_progression() {
     .replace("text", "")
     .replace(/0/g, ",");
 
+  post("setting chord progression");
   change();
 }
 
