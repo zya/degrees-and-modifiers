@@ -6,7 +6,7 @@ var accidentalValues = {
   x: 2,
 };
 
-exports = function accidentalNumber(acc) {
+exports.accval = function accidentalNumber(acc) {
   return accidentalValues[acc];
 };
 

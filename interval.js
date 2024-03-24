@@ -1,6 +1,6 @@
 var { knowledge } = require("./knowledge.js");
 var { vector } = require("./vector.js");
-// var toCoord = require("interval-coords");
+var { toCoord } = require("./interval-coords");
 
 function Interval(coord) {
   if (!(this instanceof Interval)) return new Interval(coord);
@@ -8,6 +8,9 @@ function Interval(coord) {
 }
 
 Interval.prototype = {
+  getType: function () {
+    return "Interval";
+  },
   name: function () {
     return knowledge.intervalsIndex[this.number() - 1];
   },
@@ -31,7 +34,7 @@ Interval.prototype = {
     return val > 0 ? val : val - 2;
   },
 
-  type: function () {
+  class: function () {
     return knowledge.intervals[this.base()][0] <= 1 ? "perfect" : "minor";
   },
 
@@ -143,12 +146,12 @@ Interval.prototype = {
   },
 };
 
-// Interval.toCoord = function (simple) {
-//   var coord = toCoord(simple);
-//   if (!coord) throw new Error("Invalid simple format interval");
+Interval.toCoord = function (simple) {
+  var coord = toCoord(simple);
+  if (!coord) throw new Error("Invalid simple format interval");
 
-//   return new Interval(coord);
-// };
+  return new Interval(coord);
+};
 
 Interval.from = function (from, to) {
   return from.interval(to);

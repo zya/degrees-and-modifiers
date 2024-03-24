@@ -1,3 +1,5 @@
+var { teoria } = require("./teoria");
+
 var C1 = 36;
 
 function includes(array, value) {
@@ -36,126 +38,161 @@ function generate(context, chordProgression) {
   for (var i = 0; i < progression.length; i++) {
     const [chordNumber, modifiers] = parseEntry(progression[i]);
 
-    post(progression[i], modifiers, modifiers.length);
     const scaleOffsetForCurrentChord = Number(chordNumber) - 1;
     const scaleRootNote = C1 + context.scale.root_note;
 
-    const first = {
-      pitch:
-        scaleRootNote +
-        getNoteFromScaleIntervals(
-          scaleOffsetForCurrentChord,
-          context.scale.scale_intervals
-        ),
-      start_time: starTimeOffset + lengthPerChord * i,
-      velocity: 100,
-      duration: lengthPerChord,
-    };
-
-    const secondIntervalIndexOffset = includes(modifiers, "sus2")
-      ? 1
-      : includes(modifiers, "sus4")
-      ? 3
-      : 2;
-
-    const second = {
-      pitch:
-        scaleRootNote +
-        getNoteFromScaleIntervals(
-          scaleOffsetForCurrentChord + secondIntervalIndexOffset,
-          context.scale.scale_intervals
-        ),
-      start_time: starTimeOffset + lengthPerChord * i,
-      velocity: 100,
-      duration: lengthPerChord,
-    };
-
-    const third = {
-      pitch:
-        scaleRootNote +
-        getNoteFromScaleIntervals(
-          scaleOffsetForCurrentChord + 4,
-          context.scale.scale_intervals
-        ),
-      start_time: starTimeOffset + lengthPerChord * i,
-      velocity: 100,
-      duration: lengthPerChord,
-    };
-
-    chords.push(first, second, third);
-
-    if (includes(modifiers, "six")) {
-      chords.push({
+    if (!includes(modifiers, "sd")) {
+      const first = {
         pitch:
           scaleRootNote +
           getNoteFromScaleIntervals(
-            scaleOffsetForCurrentChord + 5,
+            scaleOffsetForCurrentChord,
             context.scale.scale_intervals
           ),
         start_time: starTimeOffset + lengthPerChord * i,
         velocity: 100,
         duration: lengthPerChord,
-      });
-    }
+      };
 
-    if (includes(modifiers, "seven")) {
-      chords.push({
+      const secondIntervalIndexOffset = includes(modifiers, "sus2")
+        ? 1
+        : includes(modifiers, "sus4")
+        ? 3
+        : 2;
+
+      const second = {
         pitch:
           scaleRootNote +
           getNoteFromScaleIntervals(
-            scaleOffsetForCurrentChord + 6,
+            scaleOffsetForCurrentChord + secondIntervalIndexOffset,
             context.scale.scale_intervals
           ),
         start_time: starTimeOffset + lengthPerChord * i,
         velocity: 100,
         duration: lengthPerChord,
-      });
-    }
+      };
 
-    if (includes(modifiers, "nine")) {
-      chords.push({
+      const third = {
         pitch:
           scaleRootNote +
           getNoteFromScaleIntervals(
-            scaleOffsetForCurrentChord + 8,
+            scaleOffsetForCurrentChord + 4,
             context.scale.scale_intervals
           ),
         start_time: starTimeOffset + lengthPerChord * i,
         velocity: 100,
         duration: lengthPerChord,
-      });
-    }
+      };
 
-    if (includes(modifiers, "eleven")) {
-      chords.push({
-        pitch:
-          scaleRootNote +
-          getNoteFromScaleIntervals(
-            scaleOffsetForCurrentChord + 10,
-            context.scale.scale_intervals
-          ),
-        start_time: starTimeOffset + lengthPerChord * i,
-        velocity: 100,
-        duration: lengthPerChord,
-      });
-    }
+      chords.push(first, second, third);
 
-    if (includes(modifiers, "13")) {
-      chords.push({
-        pitch:
-          scaleRootNote +
-          getNoteFromScaleIntervals(
-            scaleOffsetForCurrentChord + 12,
-            context.scale.scale_intervals
-          ),
-        start_time: starTimeOffset + lengthPerChord * i,
-        velocity: 100,
-        duration: lengthPerChord,
-      });
+      if (includes(modifiers, "six")) {
+        chords.push({
+          pitch:
+            scaleRootNote +
+            getNoteFromScaleIntervals(
+              scaleOffsetForCurrentChord + 5,
+              context.scale.scale_intervals
+            ),
+          start_time: starTimeOffset + lengthPerChord * i,
+          velocity: 100,
+          duration: lengthPerChord,
+        });
+      }
+
+      if (includes(modifiers, "seven")) {
+        chords.push({
+          pitch:
+            scaleRootNote +
+            getNoteFromScaleIntervals(
+              scaleOffsetForCurrentChord + 6,
+              context.scale.scale_intervals
+            ),
+          start_time: starTimeOffset + lengthPerChord * i,
+          velocity: 100,
+          duration: lengthPerChord,
+        });
+      }
+
+      if (includes(modifiers, "nine")) {
+        chords.push({
+          pitch:
+            scaleRootNote +
+            getNoteFromScaleIntervals(
+              scaleOffsetForCurrentChord + 8,
+              context.scale.scale_intervals
+            ),
+          start_time: starTimeOffset + lengthPerChord * i,
+          velocity: 100,
+          duration: lengthPerChord,
+        });
+      }
+
+      if (includes(modifiers, "eleven")) {
+        chords.push({
+          pitch:
+            scaleRootNote +
+            getNoteFromScaleIntervals(
+              scaleOffsetForCurrentChord + 10,
+              context.scale.scale_intervals
+            ),
+          start_time: starTimeOffset + lengthPerChord * i,
+          velocity: 100,
+          duration: lengthPerChord,
+        });
+      }
+
+      if (includes(modifiers, "13")) {
+        chords.push({
+          pitch:
+            scaleRootNote +
+            getNoteFromScaleIntervals(
+              scaleOffsetForCurrentChord + 12,
+              context.scale.scale_intervals
+            ),
+          start_time: starTimeOffset + lengthPerChord * i,
+          velocity: 100,
+          duration: lengthPerChord,
+        });
+      }
+    } else {
+      const chordNotes = getSecondaryDominantNotes(
+        scaleRootNote,
+        scaleOffsetForCurrentChord
+      );
+      for (var j = 0; j < chordNotes.length; j++) {
+        chords.push({
+          pitch: chordNotes[j],
+          start_time: starTimeOffset + lengthPerChord * i,
+          velocity: 100,
+          duration: lengthPerChord,
+        });
+      }
     }
   }
 
   return chords;
+}
+
+function getSecondaryDominantNotes(scaleRootNote, scaleOffsetForCurrentChord) {
+  const note = teoria.Note.fromMIDI(
+    scaleRootNote +
+      getNoteFromScaleIntervals(
+        scaleOffsetForCurrentChord + 4,
+        context.scale.scale_intervals
+      )
+  );
+  return getSecondaryDominant(note);
+}
+
+function getSecondaryDominant(root) {
+  const chord = teoria.chord(root, "7");
+  const notes = chord.notes();
+  const midi = [];
+  for (var b = 0; b < notes.length; b++) {
+    midi.push(notes[b].midi());
+  }
+  return midi;
 }
 
 exports.generate = generate;

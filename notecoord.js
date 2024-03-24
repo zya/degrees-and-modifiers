@@ -10,7 +10,7 @@ var notes = {
   h: [-2, 5],
 };
 
-exports = function (name) {
+exports.coords = function (name) {
   return name in notes ? [notes[name][0], notes[name][1]] : null;
 };
 

@@ -20,7 +20,11 @@ function Chord(root, name) {
     bass = null;
   }
 
-  this.intervals = daccord(name).map(Interval.toCoord);
+  var daccordResult = daccord(name);
+  for (var i = 0; i < daccordResult.length; i++) {
+    this.intervals.push(Interval.toCoord(daccordResult[i]));
+  }
+
   this._voicing = this.intervals.slice();
 
   if (bass) {
@@ -44,15 +48,26 @@ function Chord(root, name) {
 Chord.prototype = {
   notes: function () {
     var root = this.root;
-    return this.voicing().map(function (interval) {
-      return root.interval(interval);
-    });
+    var voicing = this.voicing();
+    var result = [];
+
+    for (var i = 0; i < voicing.length; i++) {
+      const test = root.interval(voicing[i]);
+      result.push(test);
+    }
+
+    return result;
   },
 
   simple: function () {
-    return this.notes().map(function (n) {
-      return n.toString(true);
-    });
+    var notes = this.notes();
+    var result = [];
+
+    for (var i = 0; i < notes.length; i++) {
+      result.push(notes[i].toString(true));
+    }
+
+    return result;
   },
 
   bass: function () {

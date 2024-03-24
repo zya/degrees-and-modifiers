@@ -28,3 +28,5 @@ const context = {
 // console.log(parseEntry("2(modifier)"));
 // console.log(parseEntry("2(modifier1 modifier2)"));
 // console.log(parseEntry("1(seven+nine+eleven)"));
+
+console.log(generate(context, "2,2(sd)"));

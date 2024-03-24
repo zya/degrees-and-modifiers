@@ -20,6 +20,9 @@ function Note(coord, duration) {
 }
 
 Note.prototype = {
+  getType: function () {
+    return "Note";
+  },
   octave: function () {
     return (
       this.coord[0] +
@@ -78,9 +81,9 @@ Note.prototype = {
   interval: function (interval) {
     if (typeof interval === "string") interval = Interval.toCoord(interval);
 
-    if (interval instanceof Interval)
+    if (interval.getType() === "Interval")
       return new Note(vector.add(this.coord, interval.coord), this.duration);
-    else if (interval instanceof Note)
+    else if (interval.getType() === "Note")
       return new Interval(vector.sub(interval.coord, this.coord));
   },
 
@@ -109,26 +112,26 @@ Note.prototype = {
     return this.name().toUpperCase() + this.accidental() + this.octave();
   },
 
-  /**
-   * Returns notes that are enharmonic with this note.
-   */
-  enharmonics: function (oneaccidental) {
-    var key = this.key(),
-      limit = oneaccidental ? 2 : 3;
+  // /**
+  //  * Returns notes that are enharmonic with this note.
+  //  */
+  // enharmonics: function (oneaccidental) {
+  //   var key = this.key(),
+  //     limit = oneaccidental ? 2 : 3;
 
-    return ["m3", "m2", "m-2", "m-3"]
-      .map(this.interval.bind(this))
-      .filter(function (note) {
-        var acc = note.accidentalValue();
-        var diff = key - (note.key() - acc);
+  //   return ["m3", "m2", "m-2", "m-3"]
+  //     .map(this.interval.bind(this))
+  //     .filter(function (note) {
+  //       var acc = note.accidentalValue();
+  //       var diff = key - (note.key() - acc);
 
-        if (diff < limit && diff > -limit) {
-          var product = vector.mul(knowledge.sharp, diff - acc);
-          note.coord = vector.add(note.coord, product);
-          return true;
-        }
-      });
-  },
+  //       if (diff < limit && diff > -limit) {
+  //         var product = vector.mul(knowledge.sharp, diff - acc);
+  //         note.coord = vector.add(note.coord, product);
+  //         return true;
+  //       }
+  //     });
+  // },
 
   solfege: function (scale, showOctaves) {
     var interval = scale.tonic.interval(this),

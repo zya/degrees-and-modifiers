@@ -77,9 +77,14 @@ Scale.prototype = {
   },
 
   simple: function () {
-    return this.notes().map(function (n) {
-      return n.toString(true);
-    });
+    var notes = this.notes();
+    var result = [];
+
+    for (var i = 0; i < notes.length; i++) {
+      result.push(notes[i].toString(true));
+    }
+
+    return result;
   },
 
   type: function () {
@@ -112,13 +117,13 @@ Scale.prototype = {
     return this.tonic.interval(interval).interval(new Interval([octaves, 0]));
   },
 
-  solfege: function (index, showOctaves) {
-    if (index) return this.get(index).solfege(this, showOctaves);
+  // solfege: function (index, showOctaves) {
+  //   if (index) return this.get(index).solfege(this, showOctaves);
 
-    return this.notes().map(function (n) {
-      return n.solfege(this, showOctaves);
-    });
-  },
+  //   return this.notes().map(function (n) {
+  //     return n.solfege(this, showOctaves);
+  //   });
+  // },
 
   interval: function (interval) {
     interval =
