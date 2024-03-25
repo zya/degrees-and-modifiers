@@ -56,6 +56,31 @@ function getNotesForOffsets(
   return notes;
 }
 
+function getParallelChord(
+  scaleRootNote,
+  scaleOffsetForCurrentChord,
+  secondIntervalIndexOffset,
+  scaleIntervals
+) {
+  const root = teoria.note.fromMIDI(
+    scaleRootNote +
+      getNoteFromScaleIntervals(scaleOffsetForCurrentChord, scaleIntervals)
+  );
+  const interval = teoria.interval(
+    root,
+    teoria.note.fromMIDI(
+      getNote(
+        scaleRootNote,
+        scaleOffsetForCurrentChord,
+        secondIntervalIndexOffset,
+        scaleIntervals
+      )
+    )
+  );
+
+  return teoria.chord(root, interval.toString() === "m3" ? "M" : "m").notes();
+}
+
 function generate(context, progression) {
   if (!context) return [];
 
@@ -68,7 +93,7 @@ function generate(context, progression) {
     const scaleRootNote = C1 + context.scale.root_note;
     var chord = [];
 
-    if (!includes(modifiers, "sd")) {
+    if (!includes(modifiers, "sd") && !includes(modifiers, "parallel")) {
       const first = {
         pitch:
           scaleRootNote +
@@ -197,7 +222,7 @@ function generate(context, progression) {
           )
         );
       }
-    } else {
+    } else if (includes(modifiers, "sd")) {
       const chordNotes = getSecondaryDominantNotes(
         scaleRootNote,
         scaleOffsetForCurrentChord,
@@ -207,6 +232,21 @@ function generate(context, progression) {
         chord.push({
           pitch: chordNotes[j],
         });
+      }
+    } else if (includes(modifiers, "parallel")) {
+      if (includes(modifiers, "parallel")) {
+        const notes = getParallelChord(
+          scaleRootNote,
+          scaleOffsetForCurrentChord,
+          2,
+          context.scale.scale_intervals
+        );
+
+        for (var x = 0; x < notes.length; x++) {
+          chord.push({
+            pitch: notes[x].midi(),
+          });
+        }
       }
     }
 

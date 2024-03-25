@@ -103,6 +103,10 @@ Interval.prototype = {
     return new Interval(coord);
   },
 
+  type: function () {
+    return knowledge.intervals[this.base()][0] <= 1 ? "perfect" : "minor";
+  },
+
   quality: function (lng) {
     var quality = knowledge.alterations[this.type()][this.qualityValue() + 2];
 

@@ -44,7 +44,6 @@ function bang() {
   if (!ready) return;
 
   const progression = chordProgression.split(",");
-  post("prog", progression);
 
   const chords = generate(context, progression);
   const notes = getNotesFromChords(context, progression, chords);
@@ -69,7 +68,6 @@ function set_chord_progression() {
     .replace("text", "")
     .replace(/0/g, ",");
 
-  post("setting chord progression");
   change();
 }
 
