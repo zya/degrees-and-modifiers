@@ -24,6 +24,38 @@ function getNoteFromScaleIntervals(index, scaleIntervals) {
   return scaleIntervals[index % scaleIntervals.length] + 12;
 }
 
+function getNote(
+  scaleRootNote,
+  currentChordRootOffset,
+  offset,
+  scaleIntervals
+) {
+  return (
+    scaleRootNote +
+    getNoteFromScaleIntervals(currentChordRootOffset + offset, scaleIntervals)
+  );
+}
+
+function getNotesForOffsets(
+  scaleRootNote,
+  scaleOffsetForCurrentChord,
+  offsetsToAdd,
+  scaleIntervals
+) {
+  var notes = [];
+  for (var i = 0; i < offsetsToAdd.length; i++) {
+    notes.push({
+      pitch: getNote(
+        scaleRootNote,
+        scaleOffsetForCurrentChord,
+        offsetsToAdd[i],
+        scaleIntervals
+      ),
+    });
+  }
+  return notes;
+}
+
 function generate(context, progression) {
   if (!context) return [];
 
@@ -34,7 +66,7 @@ function generate(context, progression) {
 
     const scaleOffsetForCurrentChord = Number(chordNumber) - 1;
     const scaleRootNote = C1 + context.scale.root_note;
-    const chord = [];
+    var chord = [];
 
     if (!includes(modifiers, "sd")) {
       const first = {
@@ -53,78 +85,117 @@ function generate(context, progression) {
         : 2;
 
       const second = {
-        pitch:
-          scaleRootNote +
-          getNoteFromScaleIntervals(
-            scaleOffsetForCurrentChord + secondIntervalIndexOffset,
-            context.scale.scale_intervals
-          ),
+        pitch: getNote(
+          scaleRootNote,
+          scaleOffsetForCurrentChord,
+          secondIntervalIndexOffset,
+          context.scale.scale_intervals
+        ),
       };
 
       const third = {
-        pitch:
-          scaleRootNote +
-          getNoteFromScaleIntervals(
-            scaleOffsetForCurrentChord + 4,
-            context.scale.scale_intervals
-          ),
+        pitch: getNote(
+          scaleRootNote,
+          scaleOffsetForCurrentChord,
+          4,
+          context.scale.scale_intervals
+        ),
       };
 
-      chord.push(first, second, third);
+      chord.push(first);
 
-      if (includes(modifiers, "six")) {
+      if (!includes(modifiers, "power")) {
+        chord.push(second);
+      }
+
+      chord.push(third);
+
+      if (includes(modifiers, "add:6")) {
         chord.push({
-          pitch:
-            scaleRootNote +
-            getNoteFromScaleIntervals(
-              scaleOffsetForCurrentChord + 5,
-              context.scale.scale_intervals
-            ),
+          pitch: getNote(
+            scaleRootNote,
+            scaleOffsetForCurrentChord,
+            5,
+            context.scale.scale_intervals
+          ),
         });
       }
 
-      if (includes(modifiers, "seven")) {
+      if (includes(modifiers, "add:7") || includes(modifiers, "7")) {
         chord.push({
-          pitch:
-            scaleRootNote +
-            getNoteFromScaleIntervals(
-              scaleOffsetForCurrentChord + 6,
-              context.scale.scale_intervals
-            ),
+          pitch: getNote(
+            scaleRootNote,
+            scaleOffsetForCurrentChord,
+            6,
+            context.scale.scale_intervals
+          ),
         });
       }
 
-      if (includes(modifiers, "nine")) {
+      if (includes(modifiers, "9")) {
+        chord = chord.concat(
+          getNotesForOffsets(
+            scaleRootNote,
+            scaleOffsetForCurrentChord,
+            [6, 8],
+            context.scale.scale_intervals
+          )
+        );
+      }
+
+      if (includes(modifiers, "add:9")) {
         chord.push({
-          pitch:
-            scaleRootNote +
-            getNoteFromScaleIntervals(
-              scaleOffsetForCurrentChord + 8,
-              context.scale.scale_intervals
-            ),
+          pitch: getNote(
+            scaleRootNote,
+            scaleOffsetForCurrentChord,
+            8,
+            context.scale.scale_intervals
+          ),
         });
       }
 
-      if (includes(modifiers, "eleven")) {
+      if (includes(modifiers, "add:11")) {
         chord.push({
-          pitch:
-            scaleRootNote +
-            getNoteFromScaleIntervals(
-              scaleOffsetForCurrentChord + 10,
-              context.scale.scale_intervals
-            ),
+          pitch: getNote(
+            scaleRootNote,
+            scaleOffsetForCurrentChord,
+            10,
+            context.scale.scale_intervals
+          ),
+        });
+      }
+
+      if (includes(modifiers, "11")) {
+        chord = chord.concat(
+          getNotesForOffsets(
+            scaleRootNote,
+            scaleOffsetForCurrentChord,
+            [6, 8, 10],
+            context.scale.scale_intervals
+          )
+        );
+      }
+
+      if (includes(modifiers, "add:13")) {
+        chord.push({
+          pitch: getNote(
+            scaleRootNote,
+            scaleOffsetForCurrentChord,
+            12,
+            context.scale.scale_intervals
+          ),
         });
       }
 
       if (includes(modifiers, "13")) {
-        chord.push({
-          pitch:
-            scaleRootNote +
-            getNoteFromScaleIntervals(
-              scaleOffsetForCurrentChord + 12,
-              context.scale.scale_intervals
-            ),
-        });
+        chord = chord.concat(
+          getNotesForOffsets(
+            scaleRootNote,
+            scaleOffsetForCurrentChord,
+            [6, 8, 10, 12],
+            context.scale.scale_intervals
+          )
+        );
       }
     } else {
       const chordNotes = getSecondaryDominantNotes(
