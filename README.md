@@ -2,7 +2,9 @@
 
 Chords & Modifiers is a Max4Live MIDI Generator for Ableton Live that allows users to generate complex chord progressions specified using simple language.
 
-![Degrees & Modifiers Demo](./demo.mov)
+<video controls>
+  <source src="./demo.mov" type="video/mp4">
+</video>
 
 ## Installation Guide
 
