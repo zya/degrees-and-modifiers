@@ -2,7 +2,6 @@ var { Note } = require("./note.js");
 var { Interval } = require("./interval.js");
 var { Chord } = require("./chord.js");
 var { Scale } = require("./scale.js");
-var { sugar } = require("./sugar.js");
 
 var teoria;
 

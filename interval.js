@@ -1,6 +1,6 @@
 var { knowledge } = require("./knowledge.js");
 var { vector } = require("./vector.js");
-var { toCoord } = require("./interval-coords");
+var { toCoord } = require("./interval-coords.js");
 
 function Interval(coord) {
   if (!(this instanceof Interval)) return new Interval(coord);

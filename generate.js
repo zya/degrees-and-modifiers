@@ -1,4 +1,4 @@
-var { teoria } = require("./teoria");
+var { teoria } = require("./teoria.js");
 
 var C3 = 60;
 

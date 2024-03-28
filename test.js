@@ -1,4 +1,4 @@
-const { generate, parseEntry } = require("./generate");
+const { generate, parseEntry } = require("./generate.js");
 const context = {
   clip: {
     time_selection_start: 0.0,
@@ -21,10 +21,11 @@ const context = {
 };
 
 console.log(generate(context, ["2", "5"]));
+console.log(generate(context, ["1", "1(parallel)", "2(parallel)"]));
 console.log(generate(context, ["2(sus2)", "5(seven)", "1", "1"]));
 console.log(generate(context, ["2(modifier1+modifier2)", "5", "1"]));
 
-console.log(parseEntry("2"));
+console.log(parseEntry("2(parallel)"));
 console.log(parseEntry("2(modifier)"));
 console.log(parseEntry("2(modifier1 modifier2)"));
 console.log(parseEntry("1(seven+nine+eleven)"));

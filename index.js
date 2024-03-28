@@ -3,7 +3,7 @@ outlets = 2;
 
 var ready = true;
 var context = {};
-var { generate } = require("./generate");
+var { generate } = require("./generate.js");
 var chordProgression = "2,5,1,1";
 
 function jsonToDict(json_representation) {
