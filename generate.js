@@ -1,6 +1,6 @@
 var { teoria } = require("./teoria");
 
-var C1 = 36;
+var C3 = 60;
 
 function includes(array, value) {
   return array.indexOf(value) !== -1;
@@ -90,7 +90,7 @@ function generate(context, progression) {
     const [chordNumber, modifiers] = parseEntry(progression[i]);
 
     const scaleOffsetForCurrentChord = Number(chordNumber) - 1;
-    const scaleRootNote = C1 + context.scale.root_note;
+    const scaleRootNote = C3 + context.scale.root_note;
     var chord = [];
 
     if (!includes(modifiers, "sd") && !includes(modifiers, "parallel")) {

@@ -1,7 +1,7 @@
 var { Note } = require("./note.js");
-var { Interval } = require("./interval");
-var { Chord } = require("./chord");
-var { Scale } = require("./scale");
+var { Interval } = require("./interval.js");
+var { Chord } = require("./chord.js");
+var { Scale } = require("./scale.js");
 var { sugar } = require("./sugar.js");
 
 var teoria;
@@ -70,15 +70,4 @@ teoria = {
   Interval: Interval,
 };
 
-// sugar(teoria);
-
 exports.teoria = teoria;
-
-// exports.test = function () {
-//   return "test";
-// };
-
-// exports.Note = Note;
-// exports.Scale = Scale;
-// exports.Interval = Interval;
-// exports.Chord = Chord;
