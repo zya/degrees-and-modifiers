@@ -1,6 +1,6 @@
 # Degrees & Modifiers - Ableton Live MIDI Generator
 
-Chords & Modifiers is a Max4Live MIDI Generator for Ableton Live that allows users to generate complex chord progressions specified using simple language.
+Degrees & Modifiers is a Max4Live MIDI Generator for Ableton Live that allows users to generate complex chord progressions specified using simple language.
 
 https://github.com/zya/degrees-and-modifiers/assets/4020253/63d0c3cd-b498-4dc9-8ce4-6ece23186cf8
 
